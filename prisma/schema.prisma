@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String     @id @default(uuid())
+  name                 String
+  surname              String
+  email                String     @unique
+  login                String     @unique
+  password             String
+  created_at           DateTime   @default(now())
+  movie_favorite       Favorite[] @relation("user_favorite")
+  movie_classification Rating[]   @relation("user_rating")
+
+  @@map("users")
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  user       User     @relation("user_favorite", fields: [id_user], references: [id])
+  id_user    String
+  id_movie   Int
+  created_at DateTime @default(now())
+
+  @@map("favorite")
+}
+
+model Rating {
+  id       String  @id @default(uuid())
+  user     User    @relation("user_rating", fields: [id_user], references: [id])
+  id_user  String
+  id_movie Int
+  rating   Decimal @db.Decimal(2, 1)
+
+  @@map("rating")
+}
