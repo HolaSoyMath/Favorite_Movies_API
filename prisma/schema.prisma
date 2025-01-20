@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id                   String     @id @default(uuid())
-  name                 String
-  surname              String
-  email                String     @unique
-  login                String     @unique
-  password             String
-  created_at           DateTime   @default(now())
-  movie_favorite       Favorite[] @relation("user_favorite")
-  movie_classification Rating[]   @relation("user_rating")
+  id             String     @id @default(uuid())
+  name           String
+  surname        String
+  email          String     @unique
+  login          String     @unique
+  password       String
+  created_at     DateTime   @default(now())
+  movie_favorite Favorite[] @relation("user_favorite")
+  movie_rating   Rating[]   @relation("user_rating")
+  user_comment   Comment[]  @relation("user_comment")
 
   @@map("users")
 }
@@ -45,4 +46,14 @@ model Rating {
   rating   Decimal @db.Decimal(2, 1)
 
   @@map("rating")
+}
+
+model Comment {
+  id       String @id @default(uuid())
+  user     User   @relation("user_comment", fields: [id_user], references: [id])
+  id_user  String
+  id_movie Int
+  comment  String @db.Text
+
+  @@map("comment")
 }
