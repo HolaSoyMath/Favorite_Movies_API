@@ -1,3 +1,4 @@
+import { Rating } from "@prisma/client";
 import { AppError } from "../errors/AppError";
 import { prisma } from "../prisma/client";
 import { axiosInstanceTMDB } from "./axiosInstance";
@@ -41,15 +42,13 @@ export async function checkIdMovieExistsOnTmdb(movieId: number) {
 }
 
 // Função para verificar se um rating já existe para um filme
-export async function checkIdMovieHaveRatingForTheUser(movieId: number,userId: string) {
+export async function checkIdMovieHaveRatingForTheUser(userId: string, movieId: number): Promise<Rating | null> {
     const ratingExists = await prisma.rating.findFirst({
         where: {
             id_user: userId,
-            id_movie: movieId
+            id_movie: Number(movieId)
         }
     });
-    
-    if(ratingExists?.id){
-        throw new AppError("A rating already exists for this movie and user.", 409);
-    }
+
+    return ratingExists;
 }
