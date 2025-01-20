@@ -5,18 +5,22 @@ import { checkIdMovieHaveRatingForTheUser, checkIdUserExists } from "../../../..
 
 export class DeleteRatingUseCase {
     async execute(userId:string, movieId:number): Promise<Rating> {
-        checkIdUserExists(userId);
-        const resultRatingForUser = await checkIdMovieHaveRatingForTheUser(userId, movieId);
-        if (!resultRatingForUser?.id){
-            throw new AppError("A rating does not exist for this movie and user.", 404);
+        try {
+            checkIdUserExists(userId);
+            const resultRatingForUser = await checkIdMovieHaveRatingForTheUser(userId, movieId);
+            if (!resultRatingForUser?.id){
+                throw new AppError("A rating does not exist for this movie and user.", 404);
+            }
+    
+            const result = await prisma.rating.delete({
+                where: {
+                    id: resultRatingForUser.id
+                },
+            });
+    
+            return result;
+        } catch (error) {
+            throw new AppError("The movie has no rating from this user.", 500)
         }
-
-        const result = await prisma.rating.delete({
-            where: {
-                id: resultRatingForUser.id
-            },
-        });
-
-        return result;
     }
 }
