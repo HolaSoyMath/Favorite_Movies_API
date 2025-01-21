@@ -13,28 +13,28 @@ export class CreateRatingUseCase {
         movieId: number,
         rating: number
     ): Promise<Rating> {
-        try {
-            await checkIdUserExists(userId);
-            await checkIdMovieExistsOnTmdb(movieId);
-            const resultRatingForUser = await checkIdMovieHaveRatingForTheUser(userId, movieId);
+        await checkIdUserExists(userId);
+        await checkIdMovieExistsOnTmdb(movieId);
+        const resultRatingForUser = await checkIdMovieHaveRatingForTheUser(
+            userId,
+            movieId
+        );
 
-            if (resultRatingForUser?.id){
-                throw new AppError("A rating already exists for this movie and user.", 409);
-            }
-
-            const result = await prisma.rating.create({
-                data: {
-                    id_user: userId,
-                    id_movie: movieId,
-                    rating: Number(rating),
-                },
-            });
-
-            return result;
-        } catch (error) {
+        if (resultRatingForUser?.id) {
             throw new AppError(
-                "Not possible create a classification from user to movie"
+                "A rating already exists for this movie and user.",
+                409
             );
         }
+
+        const result = await prisma.rating.create({
+            data: {
+                id_user: userId,
+                id_movie: Number(movieId),
+                rating: Number(rating),
+            },
+        });
+
+        return result;
     }
 }

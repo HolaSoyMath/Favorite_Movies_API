@@ -1,4 +1,4 @@
-import { Rating } from "@prisma/client";
+import { Comment, Prisma, Rating } from "@prisma/client";
 import { AppError } from "../errors/AppError";
 import { prisma } from "../prisma/client";
 import { axiosInstanceTMDB } from "./axiosInstance";
@@ -42,13 +42,61 @@ export async function checkIdMovieExistsOnTmdb(movieId: number) {
 }
 
 // Função para verificar se um rating já existe para um filme
-export async function checkIdMovieHaveRatingForTheUser(userId: string, movieId: number): Promise<Rating | null> {
+export async function checkIdMovieHaveRatingForTheUser(
+    userId: string,
+    movieId: number
+): Promise<Rating | null> {
     const ratingExists = await prisma.rating.findFirst({
         where: {
             id_user: userId,
-            id_movie: Number(movieId)
-        }
+            id_movie: Number(movieId),
+        },
     });
 
     return ratingExists;
+}
+
+// Função para verificar o comentário criado pelo usuário
+export async function checkCommentCreatedByUser(userId: string, commentId: number): Promise<Comment> {
+    const result = await prisma.comment.findUnique({
+        where: {
+            id: commentId,
+            id_user: userId,
+        },
+    });
+
+    if (!result) {
+        throw new AppError("The comment was not found for this user.", 404);
+    };
+
+    return result;
+}
+
+// Função para verificar se o comentário é duplicado
+export async function checkCommentDuplicated(userId: string, movieId: number, comment: string): Promise<void> {
+    const result = await prisma.comment.findFirst({
+        where: {
+            id_user: userId,
+            id_movie: Number(movieId),
+            comment: comment
+        }
+    });
+
+    if (result) {
+        throw new AppError("The comment is duplicated.");
+    }
+
+    return
+}
+
+// Função para verificar se o filme possui comentários
+export async function checkCommentsForTheMovie(movieId: number): Promise<Comment[]> {
+    const result = await prisma.comment.findMany({
+        where: {
+            id_movie: Number(movieId),
+        }
+    });
+    
+    return result;
+
 }

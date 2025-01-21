@@ -21,7 +21,7 @@ favoriteRouter.get(
 favoriteRouter.post(
     "/",
     authenticateJWT,
-    body("movieId").isInt().toInt().escape().withMessage("id_movie must be an integer"),
+    body("movieId").notEmpty().isInt().toInt().escape().withMessage("movieId cannot be null and must be a number"),
     validateFieldsOnRoutes,
     addFavoriteMovieController.handle
 );

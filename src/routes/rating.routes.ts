@@ -1,20 +1,22 @@
 import { Router } from "express";
-import { CreateRatingController } from "../modules/classification/useCases/createRating/createRatingController";
+import { CreateRatingController } from "../modules/rating/useCases/createRating/createRatingController";
 import { authenticateJWT } from "../utils/authJWT";
 import { body } from "express-validator";
 import { validateFieldsOnRoutes } from "../utils/checkTypeParamOnRoute";
-import { DeleteRatingController } from "../modules/classification/useCases/deleteRating/deleteRatingController";
-import { UpdateRatingController } from "../modules/classification/useCases/updateRating/updateRatingController";
-import { GetRatingController } from "../modules/classification/useCases/getRating/GetRatingController";
+import { DeleteRatingController } from "../modules/rating/useCases/deleteRating/deleteRatingController";
+import { UpdateRatingController } from "../modules/rating/useCases/updateRating/updateRatingController";
+import { GetUserRatingController } from "../modules/rating/useCases/getUserRating/GetUserRatingController";
+import { GetAverageRatingController } from "../modules/rating/useCases/getAverageRating/GetAverageRatingController";
 
 const createRatingController = new CreateRatingController();
 const deleteRatingController = new DeleteRatingController();
 const updateRatingController = new UpdateRatingController();
-const getRatingController = new GetRatingController();
+const getUserRatingController = new GetUserRatingController();
+const getAverageRatingController = new GetAverageRatingController();
 
-const ratingRoutes = Router();
+const ratingRouter = Router();
 
-ratingRoutes.post(
+ratingRouter.post(
     "/",
     authenticateJWT,
     body("movieId").notEmpty().isInt().toInt().escape().withMessage("movieId cannot be null and must be a number"),
@@ -23,25 +25,35 @@ ratingRoutes.post(
     createRatingController.handle
 );
 
-ratingRoutes.delete("/",
+ratingRouter.delete(
+    "/",
     authenticateJWT,
     body("movieId").notEmpty().isInt().toInt().escape().withMessage("movieId cannot be null and must be a number"),
     validateFieldsOnRoutes,
     deleteRatingController.handle
-)
+);
 
-ratingRoutes.patch("/",
+ratingRouter.patch(
+    "/",
     authenticateJWT,
     body("movieId").notEmpty().isInt().toInt().escape().withMessage("movieId cannot be null and must be a number"),
     body("rating").notEmpty().isFloat({ min: 0.5, max: 5 }).toFloat().escape().withMessage("Rating cannot be null, must be a number and must be between 0.5 and 5."),
     validateFieldsOnRoutes,
     updateRatingController.handle
-)
+);
 
-ratingRoutes.get("/",
+ratingRouter.get(
+    "/",
     authenticateJWT,
     validateFieldsOnRoutes,
-    getRatingController.handle
-)
+    getUserRatingController.handle
+);
 
-export { ratingRoutes };
+ratingRouter.get(
+    "/average",
+    body("movieId").notEmpty().isInt().toInt().escape().withMessage("movieId cannot be null and must be a number"),
+    validateFieldsOnRoutes,
+    getAverageRatingController.handle
+);
+
+export { ratingRouter };

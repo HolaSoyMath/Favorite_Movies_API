@@ -12,8 +12,6 @@ export class CreateRatingController {
             const { userId } = req.headers;
             const { movieId, rating } = req.body;
 
-            checkIdMovieExistsOnTmdb(movieId);
-
             const createClassificationUseCase = new CreateRatingUseCase();
             await createClassificationUseCase.execute(
                 String(userId),

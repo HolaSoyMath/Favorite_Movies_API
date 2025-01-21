@@ -10,16 +10,16 @@ const createUserController = new CreateUserController();
 const loginUserController = new LoginUserController();
 const getUserByIDController = new GetUserByIDController();
 
-const userRoutes = Router();
+const userRouter = Router();
 
-userRoutes.get(
+userRouter.get(
     "/",
     authenticateJWT,
     validateFieldsOnRoutes,
     getUserByIDController.handle
 );
 
-userRoutes.post(
+userRouter.post(
     "/register",
     body("name").notEmpty().escape().trim().withMessage("name can not be null"),
     body("surname").notEmpty().escape().trim().withMessage("surname can not be null"),
@@ -30,7 +30,7 @@ userRoutes.post(
     createUserController.handle
 );
 
-userRoutes.post(
+userRouter.post(
     "/login",
     body("login").notEmpty().escape().trim().withMessage("login can not be null"),
     body("password").notEmpty().escape().trim().withMessage("password can not be null"),
@@ -38,4 +38,4 @@ userRoutes.post(
     loginUserController.handle
 );
 
-export { userRoutes };
+export { userRouter};
