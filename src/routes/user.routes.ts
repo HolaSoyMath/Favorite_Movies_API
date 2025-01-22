@@ -12,6 +12,7 @@ const getUserByIDController = new GetUserByIDController();
 
 const userRouter = Router();
 
+
 userRouter.get(
     "/",
     authenticateJWT,
@@ -22,20 +23,45 @@ userRouter.get(
 userRouter.post(
     "/register",
     body("name").notEmpty().escape().trim().withMessage("name can not be null"),
-    body("surname").notEmpty().escape().trim().withMessage("surname can not be null"),
-    body("email").isEmail().escape().trim().withMessage("email must be a valid email"),
-    body("login").notEmpty().escape().trim().withMessage("login can not be null"),
-    body("password").notEmpty().escape().trim().withMessage("password can not be null"),
+    body("surname")
+        .notEmpty()
+        .escape()
+        .trim()
+        .withMessage("surname can not be null"),
+    body("email")
+        .isEmail()
+        .escape()
+        .trim()
+        .withMessage("email must be a valid email"),
+    body("login")
+        .notEmpty()
+        .escape()
+        .trim()
+        .withMessage("login can not be null"),
+    body("password")
+        .notEmpty()
+        .escape()
+        .trim()
+        .withMessage("password can not be null"),
     validateFieldsOnRoutes,
     createUserController.handle
 );
 
+
 userRouter.post(
     "/login",
-    body("login").notEmpty().escape().trim().withMessage("login can not be null"),
-    body("password").notEmpty().escape().trim().withMessage("password can not be null"),
+    body("login")
+        .notEmpty()
+        .escape()
+        .trim()
+        .withMessage("login can not be null"),
+    body("password")
+        .notEmpty()
+        .escape()
+        .trim()
+        .withMessage("password can not be null"),
     validateFieldsOnRoutes,
     loginUserController.handle
 );
 
-export { userRouter};
+export { userRouter };

@@ -1,12 +1,17 @@
 import dotenv from 'dotenv';
+import swaggerUi from "swagger-ui-express";
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import { routes } from './routes';
 import { AppError } from './errors/AppError';
+import { swaggerSpec } from './swagger/swagger';
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
+
+// Configuração do Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json());
 app.use(helmet());
