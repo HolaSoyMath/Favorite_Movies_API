@@ -4,11 +4,14 @@ FROM node:18-slim
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package and Prisma files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
+# Install OpenSSL and dependencies
+RUN apt-get update -y && apt-get install -y openssl
+
+# Install Node.js dependencies
 RUN npm install
 
 # Copy source code
