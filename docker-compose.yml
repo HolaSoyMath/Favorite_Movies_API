@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: . # Diretório atual
+    ports:
+      - "8002:8002" # Porta externa mapeada para a interna
+    env_file:
+      - .env # Carrega variáveis do arquivo .env
+    environment:
+      NODE_ENV: development
+      PORT: 8002
+    command: npm start # Comando para iniciar o servidor
