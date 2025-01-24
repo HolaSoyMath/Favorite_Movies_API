@@ -1,29 +1,24 @@
-# Use Node.js como imagem base
-FROM node:18-slim
+# Base image
+FROM node:18
 
-# Diretório de trabalho no container
+# Set working directory
 WORKDIR /app
 
-# Copiar arquivos package.json e package-lock.json
-COPY package*.json ./
+# Copy package files
+COPY package.json package-lock.json ./
 
-# Instalar dependências do sistema necessárias para o Prisma
-RUN apt-get update -y && apt-get install -y openssl
-
-# Instalar dependências do Node.js
+# Install dependencies
 RUN npm install
 
-# Copiar o restante do código, incluindo o diretório `prisma`
+# Copy all files
 COPY . .
 
-# Gerar o Prisma Client
-RUN npx prisma generate --schema=./prisma/schema.prisma
-
-# Compilar o TypeScript para JavaScript
-RUN npm run build
-
-# Expõe a porta do servidor
+# Expose application port
 EXPOSE 8002
 
-# Inicia a aplicação usando o JavaScript gerado
-CMD ["npx", "dotenv", "-e", ".env", "npm", "start"]
+# Define environment variables for Render
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+# Start the application
+CMD ["npm", "run", "start:prod"]
