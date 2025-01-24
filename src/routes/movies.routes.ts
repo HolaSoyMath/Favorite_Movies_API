@@ -49,7 +49,7 @@ const moviesRouter = Router();
  */
 moviesRouter.get(
     "/",
-    body("page").isInt().escape().withMessage("page must be a valid page"),
+    body("page").toInt().isInt().escape().withMessage("page must be a valid page"),
     validateFieldsOnRoutes,
     getInitialMoviesController.handle
 );
@@ -99,7 +99,7 @@ moviesRouter.get(
  */
 moviesRouter.get(
     "/search",
-    query("page").isInt({gt: 0}).notEmpty().escape().withMessage("page can not be null and have to be positive integer number"),
+    query("page").toInt().isInt({gt: 0}).notEmpty().escape().withMessage("page can not be null and have to be positive integer number"),
     query("search").notEmpty().escape().withMessage("search can not be null"),
     validateFieldsOnRoutes,
     searchMoviesController.handle
