@@ -38,4 +38,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction): any => {
     });
 })
 
-app.listen(port, () => console.log("Server is running in port " + port));
+app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
+    console.log(`📚 API Documentation available at http://localhost:${port}/api-docs`);
+});
