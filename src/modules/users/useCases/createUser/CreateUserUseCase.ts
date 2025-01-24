@@ -28,7 +28,6 @@ export class CreateUserUseCase {
       name: user.name,
       surname: user.surname,
       email: user.email,
-      login: user.login
     }
 
     return result;

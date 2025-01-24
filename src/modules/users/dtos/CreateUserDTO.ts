@@ -11,5 +11,4 @@ export interface ReturnCreateUserDTO{
     name: string
     surname: string
     email: string
-    login: string
 }
