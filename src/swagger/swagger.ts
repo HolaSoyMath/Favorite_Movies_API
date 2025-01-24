@@ -3,13 +3,13 @@ import swaggerJSDoc from "swagger-jsdoc";
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
-    title: "API de Filmes",
+    title: "API de Filmes Favoritos",
     version: "1.0.0",
     description: "Documentação da API de Filmes com Express e Swagger",
   },
   servers: [
     {
-      url: "http://localhost:8002",
+      url: "https://favorite-movies-site.onrender.com/",
     },
   ],
   components: {
