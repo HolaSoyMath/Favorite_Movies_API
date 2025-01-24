@@ -6,19 +6,17 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json ./
+COPY prisma ./prisma
 
-# Install dependencies
+# Install dependencies and generate Prisma client
 RUN npm install
+RUN npx prisma generate
 
-# Copy all files
+# Copy all other files (source code, etc.)
 COPY . .
 
-# Expose application port
+# Expose the application port
 EXPOSE 8002
 
-# Define environment variables for Render
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
 # Start the application
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "start"]
