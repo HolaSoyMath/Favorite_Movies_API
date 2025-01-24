@@ -49,7 +49,7 @@ const moviesRouter = Router();
  */
 moviesRouter.get(
     "/",
-    body("page").toInt().isInt().escape().withMessage("page must be a valid page"),
+    query("page").toInt().isInt().escape().withMessage("page must be a valid page"),
     validateFieldsOnRoutes,
     getInitialMoviesController.handle
 );
